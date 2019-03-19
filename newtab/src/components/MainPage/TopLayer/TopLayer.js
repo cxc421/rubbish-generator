@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import classNames from 'classnames';
 import { FaBars } from 'react-icons/fa';
 import ToggleTheme from '../../ToogleTheme/ToogleTheme';
@@ -39,12 +39,44 @@ const appendNightClassName = (className, dayTheme) => {
 };
 
 const TopLayer = ({ dayTheme, setDayTheme, hide, setIsShowSideBar }) => {
+  const [isEditMode, setEditMode] = useState(false);
+  const [tmpRubbish, setTmpRubbish] = useState({ id: '', text: '' });
+  const rubbish = '雨後的高雄，有下過雨的味道。';
+  const rubbishElments = isEditMode ? (
+    <React.Fragment>
+      <input type="text" defaultValue={rubbish} autoFocus={true} />
+      <div className="btn-area">
+        <div className="btn">SAVE</div>
+        <div className="btn">CANCEL</div>
+      </div>
+    </React.Fragment>
+  ) : (
+    splitText(rubbish)
+  );
+
+  useEffect(() => {
+    if (isEditMode && hide) {
+      setEditMode(false);
+      // ToDO: Clear Temp Text
+    }
+  }, [hide, isEditMode]);
+
+  function onDoubleClickRubbish() {
+    setEditMode(true);
+  }
+
   return (
     <div className={classNames('top-layer', { hide: hide })}>
       <span className={appendNightClassName('quote', dayTheme)}>“</span>
-      <div className={appendNightClassName('rubbish', dayTheme)}>
-        {/* {splitText('If you change nothing, nothing will change.')} */}
-        {splitText('雨後的高雄，有下過雨的味道。')}
+      <div
+        className={classNames(
+          'rubbish',
+          { night: !dayTheme },
+          { shadow: isEditMode }
+        )}
+        onDoubleClick={onDoubleClickRubbish}
+      >
+        {rubbishElments}
       </div>
       <FaBars
         className={appendNightClassName('toggle-icon', dayTheme)}

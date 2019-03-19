@@ -5,7 +5,7 @@ import MainPage from './MainPage/MainPage';
 
 const App = () => {
   const [dayTheme, setDayTheme] = useState(true);
-  const [isShowSideBar, setIsShowSideBar] = useState(true);
+  const [isShowSideBar, setIsShowSideBar] = useState(false);
 
   return (
     <React.Fragment>
