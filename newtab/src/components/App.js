@@ -12,7 +12,7 @@ const defaultRubbishList = [
 const App = () => {
   const [rubbishList, setRubbishList] = useState(defaultRubbishList);
   const [dayTheme, setDayTheme] = useState(true);
-  const [isShowSideBar, setIsShowSideBar] = useState(true);
+  const [isShowSideBar, setIsShowSideBar] = useState(false);
 
   return (
     <React.Fragment>
