@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import produce from 'immer';
 import classNames from 'classnames';
 import { MdArrowForward, MdModeEdit, MdDelete } from 'react-icons/md';
@@ -13,7 +13,7 @@ const SideBar = ({
   rubbishList,
   setRubbishList
 }) => {
-  const [editRubbishId, setEdditRubbishId] = useState(null);
+  const [editRubbish, setEdditRubish] = useState({});
   const [maxDisplayNum, setMaxDisplayNum] = useState(5);
   const displayList = rubbishList.slice(0, maxDisplayNum);
   const canLoadMore = maxDisplayNum < rubbishList.length;
@@ -22,28 +22,37 @@ const SideBar = ({
     setMaxDisplayNum(maxDisplayNum + 5);
   }
 
-  function editRubbish(e) {
-    if (editRubbishId) {
+  function toEditRubbish(e) {
+    if (editRubbish) {
       const text = e.target.value;
-      setRubbishList(
-        produce(draftList => {
-          draftList.find(r => r.id === editRubbishId).text = text;
-        })
-      );
+      setEdditRubish({ ...editRubbish, text });
     }
+  }
+
+  function onEditComplete() {
+    setRubbishList(
+      produce(rubbishList, draftList => {
+        if (editRubbish.text.trim().length === 0) {
+          return draftList.filter(r => r.id !== editRubbish.id);
+        }
+        const target = draftList.find(r => r.id === editRubbish.id);
+        target.text = editRubbish.text;
+      })
+    );
+    setEdditRubish({});
   }
 
   function onKeyDown(e) {
     if (e.keyCode === 13) {
-      setEdditRubbishId(null);
+      onEditComplete();
     }
   }
 
   function onBlur() {
-    setEdditRubbishId(null);
+    onEditComplete();
   }
 
-  function deleteRubbishById(id) {
+  function deleteRubishById(id) {
     setRubbishList(rubbishList.filter(r => r.id !== id));
   }
 
@@ -68,12 +77,12 @@ const SideBar = ({
           <div className="table-body">
             {displayList.map(obj => (
               <div className="quote-row" key={obj.id}>
-                {obj.id === editRubbishId ? (
+                {obj.id === editRubbish.id ? (
                   <input
                     type="text"
                     className="quote-input"
-                    value={obj.text}
-                    onChange={editRubbish}
+                    value={editRubbish.text}
+                    onChange={toEditRubbish}
                     onBlur={onBlur}
                     onKeyDown={onKeyDown}
                     autoFocus={true}
@@ -85,12 +94,12 @@ const SideBar = ({
                   <MdModeEdit
                     size={32}
                     title="Edit quote"
-                    onClick={() => setEdditRubbishId(obj.id)}
+                    onClick={() => setEdditRubish({ ...obj })}
                   />
                   <MdDelete
                     size={32}
                     title="Delete quote"
-                    onClick={() => deleteRubbishById(obj.id)}
+                    onClick={() => deleteRubishById(obj.id)}
                   />
                 </div>
               </div>

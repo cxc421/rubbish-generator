@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import produce from 'immer';
 import classNames from 'classnames';
 import { MdAdd } from 'react-icons/md';
 
-const AddQuoteLayer = ({ hide = true, dayTheme = true, setRubbishList }) => {
+const AddQuoteLayer = ({
+  hide = true,
+  dayTheme = true,
+  setRubbishList,
+  rubbishList
+}) => {
   const [newRubbishText, setNewRubbishText] = useState('');
 
   function onInputSubmit(e) {
@@ -11,7 +16,7 @@ const AddQuoteLayer = ({ hide = true, dayTheme = true, setRubbishList }) => {
     const newText = newRubbishText.trim();
     if (newText.length > 0) {
       setRubbishList(
-        produce(draftList => {
+        produce(rubbishList, draftList => {
           draftList.splice(0, 0, {
             text: newText,
             id: new Date().getTime()

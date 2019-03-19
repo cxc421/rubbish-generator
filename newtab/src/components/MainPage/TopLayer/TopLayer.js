@@ -110,7 +110,7 @@ const TopLayer = ({
 
   function saveTmpRubbish() {
     setRubbishList(
-      produce(draftList => {
+      produce(rubbishList, draftList => {
         const id = tmpRubbish.id;
         const target = draftList.find(r => r.id === id);
         target.text = tmpRubbish.text;

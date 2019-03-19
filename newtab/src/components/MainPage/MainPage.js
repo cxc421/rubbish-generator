@@ -33,6 +33,7 @@ const MainPage = ({
       <AddQuoteLayer
         dayTheme={dayTheme}
         hide={!isShowSideBar}
+        rubbishList={rubbishList}
         setRubbishList={setRubbishList}
       />
       <SideBar
