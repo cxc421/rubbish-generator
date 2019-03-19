@@ -21,7 +21,7 @@ const SideBar = ({
   setRubbishList
 }) => {
   const tableBodyRef = useRef(null);
-  const [editRubbishId, setEdditRubbishId] = useState(null);
+  const [editRubbish, setEdditRubish] = useState({});
   const displayList = rubbishList;
   const prevousListLength = usePrevious(rubbishList.length);
 
@@ -32,55 +32,51 @@ const SideBar = ({
     }
   }, [rubbishList]);
 
-  function editRubbish(e) {
-    if (editRubbishId) {
+  function toEditRubbish(e) {
+    if (editRubbish) {
       const text = e.target.value;
-      setRubbishList(
-        produce(draftList => {
-          draftList.find(r => r.id === editRubbishId).text = text;
-        })
-      );
+      setEdditRubish({ ...editRubbish, text });
     }
   }
 
-  function checkNotEmpty() {
+  function onEditComplete() {
     setRubbishList(
-      produce(draftList => {
-        const target = draftList.find(r => r.id === editRubbishId);
-        if (target.text.trim().length === 0) {
-          return draftList.filter(r => r.id !== target.id);
+      produce(rubbishList, draftList => {
+        if (editRubbish.text.trim().length === 0) {
+          return draftList.filter(r => r.id !== editRubbish.id);
         }
+        const target = draftList.find(r => r.id === editRubbish.id);
+        target.text = editRubbish.text;
       })
     );
+    setEdditRubish({});
   }
 
   function onKeyDown(e) {
     if (e.keyCode === 13) {
-      setEdditRubbishId(null);
-      checkNotEmpty();
+      onEditComplete();
     }
   }
 
   function onBlur() {
-    setEdditRubbishId(null);
-    checkNotEmpty();
+    onEditComplete();
   }
 
-  function deleteRubbishById(id) {
+  function deleteRubishById(id) {
     setRubbishList(rubbishList.filter(r => r.id !== id));
   }
 
   function onClckAddNewQuoteBtn() {
     const newId = new Date().getTime();
     setRubbishList(
-      produce(draftList => {
+      produce(rubbishList, draftList => {
         draftList.push({
           id: newId,
           text: ''
         });
       })
     );
-    setEdditRubbishId(newId);
+    setEdditRubish({ id: newId, text: '' });
   }
 
   return (
@@ -97,12 +93,12 @@ const SideBar = ({
           <div className="table-body" ref={tableBodyRef}>
             {displayList.map(obj => (
               <div className="quote-row" key={obj.id}>
-                {obj.id === editRubbishId ? (
+                {obj.id === editRubbish.id ? (
                   <input
                     type="text"
                     className="quote-input"
-                    value={obj.text}
-                    onChange={editRubbish}
+                    value={editRubbish.text}
+                    onChange={toEditRubbish}
                     onBlur={onBlur}
                     onKeyDown={onKeyDown}
                     autoFocus={true}
@@ -114,12 +110,12 @@ const SideBar = ({
                   <MdModeEdit
                     size={32}
                     title="Edit quote"
-                    onClick={() => setEdditRubbishId(obj.id)}
+                    onClick={() => setEdditRubish({ ...obj })}
                   />
                   <MdDelete
                     size={32}
                     title="Delete quote"
-                    onClick={() => deleteRubbishById(obj.id)}
+                    onClick={() => deleteRubishById(obj.id)}
                   />
                 </div>
               </div>
