@@ -135,12 +135,20 @@ p {
       }
     }
 
-    .quote {
+    .quote,
+    .quote-input {
       font-family: 'Playfair Display', serif;
       font-weight: normal;
       font-size: 16px;
       line-height: 21px;
       font-style: italic;
+      flex-grow: 1;
+    }
+
+    .quote-input {
+      background: transparent;
+      border: none;
+      outline: none;
     }
 
     .quote-btn-block {
@@ -274,6 +282,7 @@ p {
         transition: all 300ms;
         text-align: center;
         min-width: 88px;
+        font-style: normal;
 
         &:nth-child(1) {
           color: white;
@@ -417,6 +426,7 @@ p {
         line-height: 32px;
         color: white;
         transition: all 300ms;
+        width: calc(100% - 50px);
       }
 
       .add-quote-icon {

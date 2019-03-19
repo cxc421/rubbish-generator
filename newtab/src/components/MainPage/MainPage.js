@@ -9,7 +9,9 @@ const MainPage = ({
   dayTheme,
   setDayTheme,
   isShowSideBar,
-  setIsShowSideBar
+  setIsShowSideBar,
+  rubbishList,
+  setRubbishList
 }) => {
   return (
     <div
@@ -25,13 +27,21 @@ const MainPage = ({
         setDayTheme={setDayTheme}
         setIsShowSideBar={setIsShowSideBar}
         hide={isShowSideBar}
+        rubbishList={rubbishList}
+        setRubbishList={setRubbishList}
       />
-      <AddQuoteLayer dayTheme={dayTheme} hide={!isShowSideBar} />
+      <AddQuoteLayer
+        dayTheme={dayTheme}
+        hide={!isShowSideBar}
+        setRubbishList={setRubbishList}
+      />
       <SideBar
         show={isShowSideBar}
         dayTheme={dayTheme}
         setDayTheme={setDayTheme}
         setIsShowSideBar={setIsShowSideBar}
+        rubbishList={rubbishList}
+        setRubbishList={setRubbishList}
       />
     </div>
   );

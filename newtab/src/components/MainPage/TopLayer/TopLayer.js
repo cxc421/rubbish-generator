@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import produce from 'immer';
 import classNames from 'classnames';
 import { FaBars } from 'react-icons/fa';
 import ToggleTheme from '../../ToogleTheme/ToogleTheme';
@@ -38,16 +39,44 @@ const appendNightClassName = (className, dayTheme) => {
   return `${className} night`;
 };
 
-const TopLayer = ({ dayTheme, setDayTheme, hide, setIsShowSideBar }) => {
+const makeRandomRubbishId = rubbishList => {
+  const index = Math.floor(Math.random() * rubbishList.length);
+  return rubbishList[index] ? rubbishList[index].id : 0;
+};
+
+const findRubbishById = (rubbishList, id) => {
+  const rubbish = rubbishList.find(r => r.id === id);
+  return rubbish || null;
+};
+
+const TopLayer = ({
+  dayTheme,
+  setDayTheme,
+  hide,
+  setIsShowSideBar,
+  rubbishList,
+  setRubbishList
+}) => {
+  const [rubbishId, setRubbishId] = useState(makeRandomRubbishId(rubbishList));
   const [isEditMode, setEditMode] = useState(false);
   const [tmpRubbish, setTmpRubbish] = useState({ id: '', text: '' });
-  const rubbish = '雨後的高雄，有下過雨的味道。';
+  const selectRubbish = findRubbishById(rubbishList, rubbishId);
+  const rubbish = selectRubbish ? selectRubbish.text : '';
   const rubbishElments = isEditMode ? (
     <React.Fragment>
-      <input type="text" defaultValue={rubbish} autoFocus={true} />
+      <input
+        type="text"
+        value={tmpRubbish.text}
+        onChange={onChangeTmpRubbish}
+        autoFocus={true}
+      />
       <div className="btn-area">
-        <div className="btn">SAVE</div>
-        <div className="btn">CANCEL</div>
+        <div className="btn" onClick={saveTmpRubbish}>
+          儲存
+        </div>
+        <div className="btn" onClick={cancelTmpRubbish}>
+          取消
+        </div>
       </div>
     </React.Fragment>
   ) : (
@@ -57,12 +86,37 @@ const TopLayer = ({ dayTheme, setDayTheme, hide, setIsShowSideBar }) => {
   useEffect(() => {
     if (isEditMode && hide) {
       setEditMode(false);
-      // ToDO: Clear Temp Text
     }
   }, [hide, isEditMode]);
 
+  useEffect(() => {
+    if (!selectRubbish) {
+      setRubbishId(makeRandomRubbishId(rubbishList));
+    }
+  }, [rubbishList]);
+
+  function onChangeTmpRubbish(e) {
+    setTmpRubbish({ ...tmpRubbish, text: e.target.value });
+  }
+
   function onDoubleClickRubbish() {
+    setTmpRubbish({ ...selectRubbish });
     setEditMode(true);
+  }
+
+  function cancelTmpRubbish() {
+    setEditMode(false);
+  }
+
+  function saveTmpRubbish() {
+    setRubbishList(
+      produce(draftList => {
+        const id = tmpRubbish.id;
+        const target = draftList.find(r => r.id === id);
+        target.text = tmpRubbish.text;
+      })
+    );
+    setEditMode(false);
   }
 
   return (

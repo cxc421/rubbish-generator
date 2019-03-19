@@ -1,10 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import produce from 'immer';
 import classNames from 'classnames';
 import { MdArrowForward, MdModeEdit, MdDelete } from 'react-icons/md';
 
 import ToggleTheme from '../../ToogleTheme/ToogleTheme';
 
-const SideBar = ({ show, dayTheme, setDayTheme, setIsShowSideBar }) => {
+const SideBar = ({
+  show,
+  dayTheme,
+  setDayTheme,
+  setIsShowSideBar,
+  rubbishList,
+  setRubbishList
+}) => {
+  const [editRubbishId, setEdditRubbishId] = useState(null);
+  const [maxDisplayNum, setMaxDisplayNum] = useState(5);
+  const displayList = rubbishList.slice(0, maxDisplayNum);
+  const canLoadMore = maxDisplayNum < rubbishList.length;
+
+  function loadMoreRubbish() {
+    setMaxDisplayNum(maxDisplayNum + 5);
+  }
+
+  function editRubbish(e) {
+    if (editRubbishId) {
+      const text = e.target.value;
+      setRubbishList(
+        produce(draftList => {
+          draftList.find(r => r.id === editRubbishId).text = text;
+        })
+      );
+    }
+  }
+
+  function onKeyDown(e) {
+    if (e.keyCode === 13) {
+      setEdditRubbishId(null);
+    }
+  }
+
+  function onBlur() {
+    setEdditRubbishId(null);
+  }
+
+  function deleteRubbishById(id) {
+    setRubbishList(rubbishList.filter(r => r.id !== id));
+  }
+
   return (
     <div
       className={classNames('sidebar', { hide: !show }, { dark: !dayTheme })}
@@ -18,52 +60,46 @@ const SideBar = ({ show, dayTheme, setDayTheme, setIsShowSideBar }) => {
       </div>
       <div className="content">
         <div className="title-row">
-          <h2 className="title">Dark mode</h2>
+          <h2 className="title">夜間模式</h2>
           <ToggleTheme dayTheme={dayTheme} setDayTheme={setDayTheme} />
         </div>
         <div className="table">
-          <div className="table-title">Quotes</div>
+          <div className="table-title">我的語錄</div>
           <div className="table-body">
-            <div className="quote-row">
-              <span className="quote">Stay hungry; stay foolish.</span>
-              <div className="quote-btn-block">
-                <MdModeEdit size={32} title="Edit quote" />
-                <MdDelete size={32} title="Delete quote" />
+            {displayList.map(obj => (
+              <div className="quote-row" key={obj.id}>
+                {obj.id === editRubbishId ? (
+                  <input
+                    type="text"
+                    className="quote-input"
+                    value={obj.text}
+                    onChange={editRubbish}
+                    onBlur={onBlur}
+                    onKeyDown={onKeyDown}
+                    autoFocus={true}
+                  />
+                ) : (
+                  <span className="quote">{obj.text}</span>
+                )}
+                <div className="quote-btn-block">
+                  <MdModeEdit
+                    size={32}
+                    title="Edit quote"
+                    onClick={() => setEdditRubbishId(obj.id)}
+                  />
+                  <MdDelete
+                    size={32}
+                    title="Delete quote"
+                    onClick={() => deleteRubbishById(obj.id)}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="quote-row">
-              <span className="quote">Stay hungry; stay foolish.</span>
-              <div className="quote-btn-block">
-                <MdModeEdit size={32} title="Edit quote" />
-                <MdDelete size={32} title="Delete quote" />
+            ))}
+            {canLoadMore && (
+              <div className="load-more-row" onClick={loadMoreRubbish}>
+                <span className="load-more-btn">載入更多</span>
               </div>
-            </div>
-            <div className="quote-row">
-              <span className="quote">Stay hungry; stay foolish.</span>
-              <div className="quote-btn-block">
-                <MdModeEdit size={32} title="Edit quote" />
-                <MdDelete size={32} title="Delete quote" />
-              </div>
-            </div>
-            <div className="quote-row">
-              <span className="quote">Stay hungry; stay foolish.</span>
-              <div className="quote-btn-block">
-                <MdModeEdit size={32} title="Edit quote" />
-                <MdDelete size={32} title="Delete quote" />
-              </div>
-            </div>
-            <div className="quote-row">
-              <span className="quote">
-                You are what you do, not what you say you’ll do.
-              </span>
-              <div className="quote-btn-block">
-                <MdModeEdit size={32} title="Edit quote" />
-                <MdDelete size={32} title="Delete quote" />
-              </div>
-            </div>
-            <div className="load-more-row">
-              <span className="load-more-btn">LOAD MORE</span>
-            </div>
+            )}
           </div>
         </div>
       </div>
