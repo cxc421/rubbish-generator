@@ -8,13 +8,13 @@ const webpackCommon = require('./webpack.common');
 
 const pathsToClean = ['popup'];
 const cleanOptions = {
-  root: path.resolve(__dirname, '../../build')
+  root: path.resolve(__dirname, '../../../build')
 };
 
 module.exports = merge.smart(webpackCommon, {
   output: {
     filename: 'main.[chunkhash].js',
-    path: path.resolve(__dirname, '../../build/popup')
+    path: path.resolve(__dirname, '../../../build/popup')
   },
   mode: 'production',
   optimization: {

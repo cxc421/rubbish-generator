@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "rubbish-generator",
+  "description": "Click new tab to see some funny rubbish",
+  "version": "1.0",
+  "icons": {
+    "16": "icons/extension-icon-16px.png",
+    "64": "icons/extension-icon-64px.png",
+    "128": "icons/extension-icon-128px.png"
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_title": "Rubbish Generator",
+    "default_icon": {
+      "16": "icons/extension-icon-16px.png",
+      "64": "icons/extension-icon-64px.png",
+      "128": "icons/extension-icon-128px.png"
+    }
+  },
+  "chrome_url_overrides": {
+    "newtab": "newtab.html"
+  },
+  "permissions": ["storage"]
+}

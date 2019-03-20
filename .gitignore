@@ -1,2 +1,5 @@
 _old
 node_modules
+build.crx
+build.pem
+build.zip

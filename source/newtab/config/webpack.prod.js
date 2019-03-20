@@ -8,13 +8,13 @@ const webpackCommon = require('./webpack.common');
 
 const pathsToClean = ['newtab'];
 const cleanOptions = {
-  root: path.resolve(__dirname, '../../build')
+  root: path.resolve(__dirname, '../../../build')
 };
 
 module.exports = merge.smart(webpackCommon, {
   output: {
     filename: 'main.[chunkhash].js',
-    path: path.resolve(__dirname, '../../build/newtab')
+    path: path.resolve(__dirname, '../../../build/newtab')
   },
   mode: 'production',
   optimization: {
