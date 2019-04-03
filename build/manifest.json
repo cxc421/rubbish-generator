@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "rubbish-generator",
   "description": "Click new tab to see some funny rubbish",
-  "version": "2.0",
+  "version": "2.1",
   "icons": {
     "16": "icons/extension-icon-16px.png",
     "64": "icons/extension-icon-64px.png",
