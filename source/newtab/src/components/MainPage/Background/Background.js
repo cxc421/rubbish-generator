@@ -1,9 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
-import bgDaySrc from 'assets/josh-hild-1423151-unsplash.jpg';
-import bgNightSrc from 'assets/sharon-christina-rorvik-250220-unsplash.jpg';
 
-const Background = ({ dayTheme, isShowSideBar }) => {
+const Background = ({ dayTheme, isShowSideBar, bgDaySrc, bgNightSrc }) => {
   return (
     <div
       className={classNames('background-wrapper', {

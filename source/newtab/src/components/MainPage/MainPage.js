@@ -11,7 +11,10 @@ const MainPage = ({
   isShowSideBar,
   setIsShowSideBar,
   rubbishList,
-  setRubbishList
+  setRubbishList,
+  bgDaySrc,
+  bgNightSrc,
+  setBackground
 }) => {
   return (
     <div
@@ -21,7 +24,12 @@ const MainPage = ({
         { night: !dayTheme }
       )}
     >
-      <Background dayTheme={dayTheme} isShowSideBar={isShowSideBar} />
+      <Background
+        dayTheme={dayTheme}
+        isShowSideBar={isShowSideBar}
+        bgDaySrc={bgDaySrc}
+        bgNightSrc={bgNightSrc}
+      />
       <TopLayer
         dayTheme={dayTheme}
         setDayTheme={setDayTheme}
@@ -43,6 +51,9 @@ const MainPage = ({
         setIsShowSideBar={setIsShowSideBar}
         rubbishList={rubbishList}
         setRubbishList={setRubbishList}
+        bgDaySrc={bgDaySrc}
+        bgNightSrc={bgNightSrc}
+        setBackground={setBackground}
       />
     </div>
   );
